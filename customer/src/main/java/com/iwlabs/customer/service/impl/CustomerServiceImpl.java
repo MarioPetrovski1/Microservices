@@ -3,7 +3,7 @@ package com.iwlabs.customer.service.impl;
 import com.iwlabs.customer.domain.Customer;
 import com.iwlabs.customer.domain.dto.CustomerDTO;
 import com.iwlabs.customer.mapper.CustomerMapper;
-import com.iwlabs.customer.repositroy.CustomerRepository;
+import com.iwlabs.customer.repository.CustomerRepository;
 import com.iwlabs.customer.service.CustomerService;
 import com.iwlabs.customer.utils.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
