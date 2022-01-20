@@ -1,0 +1,7 @@
+# IDEs and editors
+*.idea
+*.iml
+*.project
+*.classpath
+*.settings
+*.target
