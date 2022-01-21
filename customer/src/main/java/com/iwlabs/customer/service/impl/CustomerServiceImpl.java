@@ -9,6 +9,8 @@ import com.iwlabs.customer.utils.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,27 +29,40 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CustomerDTO getById(Integer id) {
-		Optional<Customer> customer = customerRepository.findById(id);
+	public CustomerDTO getByUuid(String uuid) {
+		Customer customer = findByUuid(uuid);
+		return customerMapper.entityToDto(customer);
+	}
+
+	@Override
+	public void deleteCustomer(String uuid) {
+		Customer entity = findByUuid(uuid);
+		customerRepository.delete(entity);
+	}
+
+	@Override
+	public CustomerDTO updateCustomer(String uuid, CustomerDTO customerDTO) {
+		Customer entity = findByUuid(uuid);
+		customerMapper.mapRequestedFieldsForUpdate(entity,customerDTO);
+		customerRepository.saveAndFlush(entity);
+		return customerMapper.entityToDto(entity);
+	}
+
+	@Override
+	public List<CustomerDTO> findAll() {
+		List<Customer> allCustomers = customerRepository.findAll();
+		List<CustomerDTO> allCustomerMapped = new ArrayList<>();
+		allCustomers.forEach(customer -> allCustomerMapped.add(customerMapper.entityToDto(customer)));
+		return allCustomerMapped;
+	}
+
+
+	private Customer findByUuid(String uuid) {
+		Optional<Customer> customer = customerRepository.findByUuid(uuid);
 		if(customer.isPresent()) {
-			return customerMapper.entityToDto(customer.get());
+			return customer.get();
 		} else {
 			throw new ResourceNotFoundException("Customer not found");
 		}
-	}
-
-	@Override
-	public void deleteCustomer(Integer id) {
-		customerRepository.deleteById(id);
-	}
-
-	@Override
-	public CustomerDTO updateCustomer(Integer id, CustomerDTO customerDTO) {
-		CustomerDTO persistedCustomer = getById(id);
-		Customer persistedEntity = customerMapper.dtoToEntity(persistedCustomer);
-		persistedEntity.setId(id);
-		customerMapper.mapRequestedFieldsForUpdate(persistedEntity,customerDTO);
-		customerRepository.saveAndFlush(persistedEntity);
-		return customerMapper.entityToDto(persistedEntity);
 	}
 }

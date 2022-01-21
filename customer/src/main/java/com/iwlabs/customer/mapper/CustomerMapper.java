@@ -11,9 +11,11 @@ public class CustomerMapper implements GeneralMapper<CustomerDTO, Customer> {
 	@Override
 	public CustomerDTO entityToDto(Customer customer) {
 		CustomerDTO customerDTO = new CustomerDTO();
+		customerDTO.setUuid(customer.getUuid());
 		customerDTO.setFirstName(customer.getFirstName());
 		customerDTO.setLastName(customer.getLastName());
 		customerDTO.setEmail(customer.getEmail());
+		customerDTO.setCreatedOn(customer.getCreatedOn());
 		return customerDTO;
 	}
 
