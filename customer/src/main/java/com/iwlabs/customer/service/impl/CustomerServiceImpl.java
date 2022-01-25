@@ -31,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public void registerCustomer(CustomerDTO customerRequestDTO) {
 		Customer customer = customerMapper.dtoToEntity(customerRequestDTO);
 		customerRepository.saveAndFlush(customer);
-		FraudCheckResponse fraudCheckResponse = restTemplate.getForObject("http://localhost:8082/api/v1/fraud-check/{customerId}",
+		FraudCheckResponse fraudCheckResponse = restTemplate.getForObject("http://FRAUD/api/v1/fraud-check/{customerId}",
 				FraudCheckResponse.class,
 				customer.getId());
 
