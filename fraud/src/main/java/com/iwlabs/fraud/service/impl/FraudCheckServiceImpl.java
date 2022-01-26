@@ -1,7 +1,7 @@
 package com.iwlabs.fraud.service.impl;
 
+import com.iwlabs.clients.fraud.FraudCheckResponse;
 import com.iwlabs.fraud.domain.FraudCheckHistory;
-import com.iwlabs.fraud.domain.dto.FraudCheckResponse;
 import com.iwlabs.fraud.mapper.FraudCheckMapper;
 import com.iwlabs.fraud.repository.FraudCheckHistoryRepository;
 import com.iwlabs.fraud.service.FraudCheckService;
@@ -20,14 +20,19 @@ public class FraudCheckServiceImpl implements FraudCheckService {
 	FraudCheckMapper fraudCheckMapper;
 
 	@Override
-	public FraudCheckResponse isFraudelentCustomer(Integer customerId) {
+	public FraudCheckResponse isFraudelentCustomer(Integer customerId,String customerEmail) {
+		boolean isFraudser = false;
+
+		if(!customerEmail.contains("@")) {
+			isFraudser = true;
+		}
+
 		FraudCheckHistory history = FraudCheckHistory.builder()
 						.customerId(customerId)
-						.isFraudster(false)
+						.isFraudster(isFraudser)
 						.createdOn(new Date())
 						.build();
 		fraudCheckHistoryRepository.save(history);
-		//TODO: Make some implementation for isFraud
 		return fraudCheckMapper.entityToDto(history);
 	}
 

@@ -1,8 +1,9 @@
 package com.iwlabs.customer.service.impl;
 
+import com.iwlabs.clients.fraud.FraudClient;
 import com.iwlabs.customer.domain.Customer;
 import com.iwlabs.customer.domain.dto.CustomerDTO;
-import com.iwlabs.customer.domain.dto.FraudCheckResponse;
+import com.iwlabs.clients.fraud.FraudCheckResponse;
 import com.iwlabs.customer.mapper.CustomerMapper;
 import com.iwlabs.customer.repository.CustomerRepository;
 import com.iwlabs.customer.service.CustomerService;
@@ -27,13 +28,15 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	RestTemplate restTemplate;
 
+	@Autowired
+	FraudClient fraudClient;
+
 	@Override
 	public void registerCustomer(CustomerDTO customerRequestDTO) {
 		Customer customer = customerMapper.dtoToEntity(customerRequestDTO);
 		customerRepository.saveAndFlush(customer);
-		FraudCheckResponse fraudCheckResponse = restTemplate.getForObject("http://FRAUD/api/v1/fraud-check/{customerId}",
-				FraudCheckResponse.class,
-				customer.getId());
+
+		FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId(),customer.getEmail());
 
 		if(fraudCheckResponse.isFraudster()) {
 			throw new IllegalStateException("Fraudster.");

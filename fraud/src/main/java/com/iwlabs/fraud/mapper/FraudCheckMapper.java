@@ -1,7 +1,7 @@
 package com.iwlabs.fraud.mapper;
 
+import com.iwlabs.clients.fraud.FraudCheckResponse;
 import com.iwlabs.fraud.domain.FraudCheckHistory;
-import com.iwlabs.fraud.domain.dto.FraudCheckResponse;
 import org.springframework.stereotype.Component;
 
 @Component

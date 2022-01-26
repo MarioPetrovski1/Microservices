@@ -1,4 +1,4 @@
-package com.iwlabs.customer.domain.dto;
+package com.iwlabs.clients.fraud;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
