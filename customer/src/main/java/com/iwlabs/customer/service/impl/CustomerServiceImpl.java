@@ -1,6 +1,8 @@
 package com.iwlabs.customer.service.impl;
 
 import com.iwlabs.clients.fraud.FraudClient;
+import com.iwlabs.clients.notification.NotificationClient;
+import com.iwlabs.clients.notification.NotificationRequest;
 import com.iwlabs.customer.domain.Customer;
 import com.iwlabs.customer.domain.dto.CustomerDTO;
 import com.iwlabs.clients.fraud.FraudCheckResponse;
@@ -31,6 +33,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	FraudClient fraudClient;
 
+	@Autowired
+	NotificationClient notificationClient;
+
 	@Override
 	public void registerCustomer(CustomerDTO customerRequestDTO) {
 		Customer customer = customerMapper.dtoToEntity(customerRequestDTO);
@@ -41,6 +46,13 @@ public class CustomerServiceImpl implements CustomerService {
 		if(fraudCheckResponse.isFraudster()) {
 			throw new IllegalStateException("Fraudster.");
 		}
+
+		NotificationRequest notificationRequest = new NotificationRequest(
+				customer.getId(),
+				customer.getEmail(),
+				String.format("Hi %s, welcome",customer.getFirstName()));
+
+		notificationClient.sendNotification(notificationRequest);
 	}
 
 	@Override
