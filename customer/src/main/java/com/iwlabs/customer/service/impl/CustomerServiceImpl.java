@@ -10,6 +10,7 @@ import com.iwlabs.customer.mapper.CustomerMapper;
 import com.iwlabs.customer.repository.CustomerRepository;
 import com.iwlabs.customer.service.CustomerService;
 import com.iwlabs.customer.utils.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
@@ -38,6 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void registerCustomer(CustomerDTO customerRequestDTO) {
+		log.info("New customer registration {}",customerRequestDTO);
 		Customer customer = customerMapper.dtoToEntity(customerRequestDTO);
 		customerRepository.saveAndFlush(customer);
 
@@ -57,18 +60,21 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public CustomerDTO getByUuid(String uuid) {
+		log.info("find customer by uuid {}",uuid);
 		Customer customer = findByUuid(uuid);
 		return customerMapper.entityToDto(customer);
 	}
 
 	@Override
 	public void deleteCustomer(String uuid) {
+		log.info("delete customer by uuid {}",uuid);
 		Customer entity = findByUuid(uuid);
 		customerRepository.delete(entity);
 	}
 
 	@Override
 	public CustomerDTO updateCustomer(String uuid, CustomerDTO customerDTO) {
+		log.info("update customer by uuid {}",uuid);
 		Customer entity = findByUuid(uuid);
 		customerMapper.mapRequestedFieldsForUpdate(entity,customerDTO);
 		customerRepository.saveAndFlush(entity);
@@ -77,6 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerDTO> findAll() {
+		log.info("Find all customers");
 		List<Customer> allCustomers = customerRepository.findAll();
 		List<CustomerDTO> allCustomerMapped = new ArrayList<>();
 		allCustomers.forEach(customer -> allCustomerMapped.add(customerMapper.entityToDto(customer)));
@@ -89,6 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(customer.isPresent()) {
 			return customer.get();
 		} else {
+			log.info("Customer with uuid {} is not found",uuid);
 			throw new ResourceNotFoundException("Customer not found");
 		}
 	}
