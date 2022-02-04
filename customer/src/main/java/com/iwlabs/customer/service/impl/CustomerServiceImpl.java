@@ -1,5 +1,6 @@
 package com.iwlabs.customer.service.impl;
 
+import com.iwlabs.amqp.producer.RabbitMQMessageProducer;
 import com.iwlabs.clients.fraud.FraudClient;
 import com.iwlabs.clients.notification.NotificationClient;
 import com.iwlabs.clients.notification.NotificationRequest;
@@ -36,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 	FraudClient fraudClient;
 
 	@Autowired
-	NotificationClient notificationClient;
+	RabbitMQMessageProducer rabbitMQMessageProducer;
 
 	@Override
 	public void registerCustomer(CustomerDTO customerRequestDTO) {
@@ -55,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 				customer.getEmail(),
 				String.format("Hi %s, welcome",customer.getFirstName()));
 
-		notificationClient.sendNotification(notificationRequest);
+		rabbitMQMessageProducer.publish(notificationRequest,"internal.exchange","internal.notification.routing-key");
 	}
 
 	@Override
