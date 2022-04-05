@@ -33,6 +33,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Build and Start the project
 
+First change in the root pom.xml the execution of JIB from build to dockerBuild because build will build the images and then push them to docker hub.If you want to use it this way you have to change the configuration to point to your docker hub account,which currently is set to mine. (dockerBuild will build the images locallly and wont try to push them to docker hub)
 Go to the root of the folder and run mvn clean package.
 This will build all the jars for all microservices.
 To get them all up and running we need to follow this order:
