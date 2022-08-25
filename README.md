@@ -22,7 +22,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-* Java JDK 8 or higer
+* Java JDK 8 or higher
 * PostgreSQL
 * Docker
 
